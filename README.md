@@ -34,7 +34,7 @@ val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
   )
 )
 
-automaton.accepts(List(A, B, A, B, A, A, A, B, A, B, A, A)) // returns True
+automaton.accepts(automaton.accepts(List(B, A, B, B, A, B)) // returns True
 ```
 
 ## sbt project compiled with Scala 3
