@@ -20,8 +20,8 @@ val s1 = new State("1") with InitialState with AcceptorState
 val s2 = new State("2") with AcceptorState
 val s3 = new State("3")
 
-val isA = (a: Alphabet) => a.isInstanceOf[A.type]
-val isB = (b: Alphabet) => b.isInstanceOf[B.type]
+val isA = (a: Alphabet) => a == A
+val isB = (b: Alphabet) => b == B
 
 val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
   s1,
