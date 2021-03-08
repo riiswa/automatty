@@ -20,6 +20,23 @@ sealed trait FiniteAutomaton[A, B] {
    * @return true if the automaton accepts the word, false if not
    */
   def accepts(word: List[A]): Boolean
+  
+  protected def complementStateMap: Map[State, State] = {
+    getStates.map(s => s -> (s match {
+      case _: AcceptorState with InitialState => new State(s.label) with InitialState
+      case _: AcceptorState  => new State(s.label)
+      case s => s
+    })).toMap
+  }
+  
+  /** Create the complement of the automaton */
+  def complement: FiniteAutomaton[A,B]
+
+  /** Create an automaton with inverted transitions */
+  def inverse: FiniteAutomaton[A, B]
+  
+  /** Create a transposed automaton, i.e. its complement and then its inverse. */
+  def transpose: FiniteAutomaton[A, B] = inverse.complement
 
   /** Check if all the states in transitions are defined in the set of states */
   require(transitions.forall{
@@ -57,7 +74,14 @@ object FiniteAutomaton {
       execute(word, states.filter(s => s.isInstanceOf[InitialState])).exists(_.isInstanceOf[AcceptorState])
     }
 
-
+    def complement: Nondeterministic[A, B] = {
+      val cm = complementStateMap
+      Nondeterministic[A, B](states.map(cm), transitions.map{
+        case Transition(s1, ca, s2) => Transition(cm(s1), ca, cm(s2))
+      }, mm)
+    }
+    
+    def inverse: Nondeterministic[A, B] = Nondeterministic(states, transitions.map(_.inverse), mm)
   }
 
   /** Deterministic automaton common method ancestor
@@ -98,6 +122,14 @@ object FiniteAutomaton {
 
     def accepts(word: List[A]): Boolean = execute(word, initialState).isInstanceOf[AcceptorState]
 
+    def complement: DeterministicAncestor[A, B] = {
+      val cm = complementStateMap
+      Deterministic[A, B](cm(initialState).asInstanceOf[State with InitialState], states.map(cm), transitions.map{
+        case Transition(s1, ca, s2) => Transition(cm(s1), ca, cm(s2))
+      }, mm)
+    }
+
+    def inverse: Deterministic[A, B] = Deterministic(initialState, states, transitions.map(_.inverse), mm)
   }
 
   /** Implementation of a complete automate
@@ -120,6 +152,14 @@ object FiniteAutomaton {
       case ErrorState => throw new Exception("The automaton should be complete.")
       case state => state.isInstanceOf[AcceptorState]
     }
-  }
 
+    def complement: DeterministicAncestor[A, B] = {
+      val cm = complementStateMap
+      Complete[A, B](cm(initialState).asInstanceOf[State with InitialState], states.map(cm), transitions.map{
+        case Transition(s1, ca, s2) => Transition(cm(s1), ca, cm(s2))
+      }, mm)
+    }
+
+    def inverse: Complete[A, B] = Complete(initialState, states, transitions.map(_.inverse), mm)
+  }
 }

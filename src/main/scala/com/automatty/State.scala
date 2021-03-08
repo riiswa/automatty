@@ -8,8 +8,9 @@ trait AcceptorState extends StateAncestor
 
 trait InitialState extends StateAncestor
 
-class State(name: String = "") extends StateAncestor {
-  override def toString: String = name
+class State(val label: String = "") extends StateAncestor {
+  override def toString: String = label
   
   def -->[A, B](state: State)(implicit f: (A => Boolean)) = Transition(this, f, state)
+
 }
