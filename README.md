@@ -27,10 +27,10 @@ val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
   s1,
   Set(s2, s3),
   Set(
-    (s1 --> s2)(isB),
-    (s2 --> s2)(isB),
-    (s2 --> s3)(isA),
-    (s3 --> s2)(isB)
+    s1--isB->s2,
+    s2--isB->s2,
+    s2--isA->s3,
+    s3--isB->s2
   )
 )
 

@@ -7,6 +7,9 @@ trait Alphabet
 case object A extends Alphabet
 case object B extends Alphabet
 
+val isA = (a: Alphabet) => a == A
+val isB = (b: Alphabet) => b == B
+
 class TD1EX1 {
   @Test def _1(): Unit = {
     // The number of A is a multiple of 4
@@ -15,21 +18,18 @@ class TD1EX1 {
     val n2 = new State("2")
     val n3 = new State("3")
 
-    val isA = (a: Alphabet) => a == A
-    val isB = (b: Alphabet) => b == B
-
     val automaton = FiniteAutomaton.Complete[Alphabet, Nothing](
       n0,
       Set(n1, n2, n3),
       Set(
-        (n0 --> n1)(isA),
-        (n0 --> n0)(isB),
-        (n1 --> n2)(isA),
-        (n1 --> n1)(isB),
-        (n2 --> n3)(isA),
-        (n2 --> n2)(isB),
-        (n3 --> n0)(isA),
-        (n3 --> n3)(isB)
+        n0--isA->n1,
+        n0--isB->n0,
+        n1--isA->n2,
+        n1--isB->n1,
+        n2--isA->n3,
+        n2--isB->n2,
+        n3--isA->n0,
+        n3--isB->n3
       )
     )
     
@@ -52,14 +52,14 @@ class TD1EX1 {
       s00,
       Set(s01, s10, s11),
       Set(
-        (s00 --> s01)(x => x == B),
-        (s00 --> s10)(x => x == A),
-        (s01 --> s00)(x => x == B),
-        (s01 --> s11)(x => x == A),
-        (s11 --> s10)(x => x == B),
-        (s11 --> s01)(x => x == A),
-        (s10 --> s11)(x => x == B),
-        (s10 --> s00)(x => x == A)
+        s00--isB->s01,
+        s00--isA->s10,
+        s01--isB->s00,
+        s01--isA->s11,
+        s11--isB->s10,
+        s11--isA->s01,
+        s10--isB->s11,
+        s10->isA->s00
       )
     )
     
@@ -75,18 +75,15 @@ class TD1EX1 {
     val s1 = new State("1") with InitialState with AcceptorState
     val s2 = new State("2") with AcceptorState
     val s3 = new State("3")
-
-    val isA = (a: Alphabet) => a == A
-    val isB = (b: Alphabet) => b == B
-
+    
     val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
       s1,
       Set(s2, s3),
       Set(
-        (s1 --> s2)(isB),
-        (s2 --> s2)(isB),
-        (s2 --> s3)(isA),
-        (s3 --> s2)(isB)
+        s1--isB->s2,
+        s2--isB->s2,
+        s2--isA->s3,
+        s3--isB->s2
       )
     )
 
