@@ -1,4 +1,3 @@
-import com.automatty._
 import com.automatty.implicits._
 import com.automatty.automata._
 import com.automatty.automata.states._

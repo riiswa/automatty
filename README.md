@@ -9,32 +9,32 @@ Note: This project is under construction.
 ## Example:
 
 ```scala
-import com.automatty._
+import com.automatty.implicits._
+import com.automatty.automata._
+import com.automatty.automata.states._
 
 trait Alphabet
 case object A extends Alphabet
 case object B extends Alphabet
 
 // Automata that check if any symbol A is preceded and followed by at least one symbol B
+// Any symbol A is preceded and followed by at least one symbol B
 val s1 = new State("1") with InitialState with AcceptorState
 val s2 = new State("2") with AcceptorState
 val s3 = new State("3")
-
-val isA = (a: Alphabet) => a == A
-val isB = (b: Alphabet) => b == B
 
 val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
   s1,
   Set(s2, s3),
   Set(
-    s1--isB->s2,
-    s2--isB->s2,
-    s2--isA->s3,
-    s3--isB->s2
+    s1--B->s2,
+    s2--B->s2,
+    s2--A->s3,
+    s3--B->s2
   )
 )
 
-automaton.accepts(automaton.accepts(List(B, A, B, B, A, B)) // returns True
+automaton.accepts(List(B, A, B, B, A, B)) // returns True
 ```
 
 ## sbt project compiled with Scala 3
