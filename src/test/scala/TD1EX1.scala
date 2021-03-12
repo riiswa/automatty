@@ -1,38 +1,41 @@
 import com.automatty._
+import com.automatty.implicits._
+import com.automatty.automata._
+import com.automatty.automata.states._
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-trait Alphabet
-
-case object A extends Alphabet
-case object B extends Alphabet
-
-val isA = (a: Alphabet) => a == A
-val isB = (b: Alphabet) => b == B
 
 class TD1EX1 {
+  trait Alphabet
+
+  case object A extends Alphabet
+  case object B extends Alphabet
+  
   @Test def _1(): Unit = {
     // The number of A is a multiple of 4
     val n0 = new State("0") with InitialState with AcceptorState
     val n1 = new State("1")
     val n2 = new State("2")
     val n3 = new State("3")
-
+    
     val automaton = FiniteAutomaton.Complete[Alphabet, Nothing](
       n0,
       Set(n1, n2, n3),
       Set(
-        n0--isA->n1,
-        n0--isB->n0,
-        n1--isA->n2,
-        n1--isB->n1,
-        n2--isA->n3,
-        n2--isB->n2,
-        n3--isA->n0,
-        n3--isB->n3
+        n0--A->n1,
+        n0--B->n0,
+        n1--A->n2,
+        n1--B->n1,
+        n2--A->n3,
+        n2--B->n2,
+        n3--A->n0,
+        n3--B->n3
+        
       )
     )
-    
+
     assertEquals(automaton.accepts(Nil), true)
     assertEquals(automaton.accepts(List(B, B, B, B)), true)
     assertEquals(automaton.accepts(List(A, B, A)), false)
@@ -40,6 +43,7 @@ class TD1EX1 {
     assertEquals(automaton.accepts(List(A, B, A, B, A, A)), true)
     assertEquals(automaton.accepts(List(A, B, A, B, A, A, A, B, A, B, A, A)), true)
   }
+  
 
   @Test def _2(): Unit = {
     // An even number of A and an odd number of B
@@ -47,19 +51,18 @@ class TD1EX1 {
     val s01 = new State("(0, 1)") with AcceptorState
     val s10 = new State("(1, 0)") 
     val s11 = new State("(1, 1)")
-    
     val automaton = FiniteAutomaton.Complete[Alphabet, Nothing](
       s00,
       Set(s01, s10, s11),
       Set(
-        s00--isB->s01,
-        s00--isA->s10,
-        s01--isB->s00,
-        s01--isA->s11,
-        s11--isB->s10,
-        s11--isA->s01,
-        s10--isB->s11,
-        s10->isA->s00
+        s00--B->s01,
+        s00--A->s10,
+        s01--B->s00,
+        s01--A->s11,
+        s11--B->s10,
+        s11--A->s01,
+        s10--B->s11,
+        s10--A->s00
       )
     )
     
@@ -80,10 +83,10 @@ class TD1EX1 {
       s1,
       Set(s2, s3),
       Set(
-        s1--isB->s2,
-        s2--isB->s2,
-        s2--isA->s3,
-        s3--isB->s2
+        s1--B->s2,
+        s2--B->s2,
+        s2--A->s3,
+        s3--B->s2
       )
     )
 
