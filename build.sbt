@@ -8,5 +8,9 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test",
+
+    // https://mvnrepository.com/artifact/guru.nidi/graphviz-java
+    libraryDependencies += "guru.nidi" % "graphviz-java" % "0.18.0"
+
   )

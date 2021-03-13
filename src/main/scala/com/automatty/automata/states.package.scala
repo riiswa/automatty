@@ -17,8 +17,10 @@ package object states {
 
     //def -->[A, B](state: State)(implicit f: (A => Boolean)) = Transition[A, B](this, f, state)
 
-    def --[A](al: Set[Option[A]]): (State, Set[Option[A]])  = (this, al)
-
+    def --[A](al: Traversable[Option[A]]): (State, Set[Option[A]])  = (this, al.toSet)
+    //def --[A](al: Traversable[A]): (State, Set[Option[A]])  = (this, al.toSet)
+    //def --[A](al: Traversable[A]): (State, Set[Option[A]])  = (this, al.map(Option.apply).toSet)
+   
   }
 
   

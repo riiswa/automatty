@@ -17,25 +17,32 @@ trait Alphabet
 case object A extends Alphabet
 case object B extends Alphabet
 
-// Automata that check if any symbol A is preceded and followed by at least one symbol B
-// Any symbol A is preceded and followed by at least one symbol B
-val s1 = new State("1") with InitialState with AcceptorState
-val s2 = new State("2") with AcceptorState
-val s3 = new State("3")
-
-val automaton = FiniteAutomaton.Deterministic[Alphabet, Nothing](
-  s1,
-  Set(s2, s3),
+// Automata that check if there is an even number of A and an odd number of B
+val s00 = new State("(0, 0)") with InitialState
+val s01 = new State("(0, 1)") with AcceptorState
+val s10 = new State("(1, 0)")
+val s11 = new State("(1, 1)")
+val automaton = FiniteAutomaton.Complete[Alphabet, Nothing](
+  s00,
+  Set(s01, s10, s11),
   Set(
-    s1--B->s2,
-    s2--B->s2,
-    s2--A->s3,
-    s3--B->s2
+    s00--B->s01,
+    s00--A->s10,
+    s01--B->s00,
+    s01--A->s11,
+    s11--B->s10,
+    s11--A->s01,
+    s10--B->s11,
+    s10--A->s00
   )
 )
 
-automaton.accepts(List(B, A, B, B, A, B)) // returns True
+automaton.accepts(List(A, B, A)) // returns True
 ```
+
+It is also possible to generate the rendering of automata with the render method `automaton.render('automata.png')`.
+
+![An automaton rendered by automatty](automaton-example.png)
 
 ## sbt project compiled with Scala 3
 
