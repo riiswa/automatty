@@ -23,7 +23,9 @@ trait FiniteAutomatonOps[A, B] extends FiniteAutomaton[A, B] with RenderableAuto
   /** Create a transposed automaton, i.e. its complement and then its inverse. */
   def transpose: FiniteAutomatonOps[A, B] = inverse.complement
 
-  def union(fa: FiniteAutomaton[A, B]): FiniteAutomaton.Union[A, B] = FiniteAutomaton.Union(Set(this, fa))
+  def union(fa: FiniteAutomaton[A, B]): FiniteAutomaton.Union[A, B] = 
+    FiniteAutomaton.Union(Set(this, fa))
 
-  def intersect(fa: FiniteAutomaton[A, B]): FiniteAutomaton.Intersection[A, B] = FiniteAutomaton.Intersection(Set(this, fa))
+  def intersect(fa: FiniteAutomaton[A, B]): FiniteAutomaton.Intersection[A, B] = 
+    FiniteAutomaton.Intersection(Set(this, fa))
 }

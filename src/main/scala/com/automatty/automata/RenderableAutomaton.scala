@@ -29,7 +29,8 @@ trait RenderableAutomaton[A, B] extends FiniteAutomaton[A, B] {
     val nodes: Map[String, (Node, List[(Node, String)])] =
       states.map(s => (s.label, node(s.label) -> List.empty[(Node, String)])).toMap
 
-    val initialNodeMarkers = initialStates.map(s => node("").link(nodes(s.label)._1).`with`(Size.std().size(0, 0)))
+    val initialNodeMarkers = 
+      initialStates.map(s => node("").link(nodes(s.label)._1).`with`(Size.std().size(0, 0)))
 
     Graphviz.fromGraph(g.`with`(
       (transitions.foldLeft(nodes)(
@@ -44,4 +45,3 @@ trait RenderableAutomaton[A, B] extends FiniteAutomaton[A, B] {
     )).render(Format.PNG).toFile(new File(path))
   }
 }
-     

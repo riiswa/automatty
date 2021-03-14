@@ -1,5 +1,6 @@
 package com.automatty
 
+import com.automatty.automata.FiniteAutomaton.Epsilon
 import com.automatty.automata._
 import com.automatty.automata.states.State
 

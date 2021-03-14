@@ -3,8 +3,6 @@ package com.automatty.automata
 import com.automatty.automata.states._
 import com.automatty.automata.memory._
 
-def Epsilon = None
-
 trait FiniteAutomaton[A, B] {
   def transitions: Set[Transition[A, B]]
 
@@ -58,19 +56,8 @@ sealed trait DeterministicAncestor[A, B] extends FiniteAutomaton[A, B] with Fini
       case Some(pf) => execute(t, pf((currentState, h, mm)))
 }
 
-sealed trait FiniteAutomatonSet[A, B] extends Set[FiniteAutomaton[A, B]] with FiniteAutomaton[A, B] {
-  def fas: Set[FiniteAutomaton[A, B]]
-  
-  def states: Set[State] = fas.flatMap(_.states)
-
-  def transitions: Set[Transition[A, B]] = fas.flatMap(_.transitions)
-
-  def iterator: Iterator[FiniteAutomaton[A, B]] = fas.iterator
-  
-  def contains(elem: FiniteAutomaton[A, B]): Boolean = fas.contains(elem)
-}
-
 object FiniteAutomaton {
+  def Epsilon = None
   
   case class Union[A, B](fas: Set[FiniteAutomaton[A, B]]) extends FiniteAutomatonSet[A, B] {
     def accepts(word: Iterable[A]): Boolean = fas.exists(_.accepts(word))

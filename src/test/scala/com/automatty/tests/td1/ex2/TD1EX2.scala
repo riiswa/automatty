@@ -73,7 +73,7 @@ class TD1EX2 extends AnyFlatSpec with should.Matchers with HavePath(1, 2) {
     automaton.accepts(List(Binary.One, Binary.One)) should be (true)
     automaton.accepts(List(Binary.One, Binary.One, Binary.Zero, Binary.Zero)) should be (true)
 
-    automaton.render(path(1, ""))
+    automaton.render(path(2, ""))
   }
   
  
