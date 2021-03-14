@@ -10,6 +10,11 @@ import org.scalatest._
 import flatspec._
 import matchers._
 
+sealed trait Alphabet
+
+case object A extends Alphabet
+case object B extends Alphabet
+
 class TD1EX1 extends AnyFlatSpec with should.Matchers with HavePath(1, 1) {
   "An automaton" should "determinate if the number of A is a multiple of 4 (ex 1.1.1)" in {
     val n0 = new State("0") with InitialState with AcceptorState
