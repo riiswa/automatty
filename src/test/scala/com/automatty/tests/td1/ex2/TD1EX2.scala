@@ -45,7 +45,7 @@ class TD1EX2 extends AnyFlatSpec with should.Matchers with HavePath(1, 2) {
     automaton.render(path(1, ""))
   }
 
-  "An automaton" should "determinate if a integer is a multiple of 3 (ex 1.2.2)" in {
+  it should "determinate if a integer is a multiple of 3 (ex 1.2.2)" in {
     val si = new State("-") with InitialState
     val s0 = new State("0") with AcceptorState
     val s1 = new State("1")

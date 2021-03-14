@@ -32,12 +32,41 @@ class TD1EX3 extends AnyFlatSpec with should.Matchers with HavePath(1, 3) {
         s2--A->s3
       )
     )
-    
+
     automaton.accepts(Nil) should be (false)
     automaton.accepts(List(A, A)) should be (true)
     automaton.accepts(List(A, B, A, A)) should be (true)
     automaton.accepts(List(A, B, A)) should be (false)
-    
+
     automaton.render(path(1, ""))
+  }
+  
+  it should "determinate if the last letter previously appears in the words" in {
+    def buildAutomaton(l: Alphabet): FiniteAutomaton.Nondeterministic[Alphabet, Nothing] = {
+      val otherLetters = (Set(A, B, C) - l).map(Option.apply)
+      val s0 = new State(s"0$l") with InitialState
+      val s1 = new State(s"1$l")
+      val ok = new State(s"ok$l") with AcceptorState {}
+      
+      val automaton = FiniteAutomaton.Nondeterministic[Alphabet, Nothing](
+        Set(s0, s1, ok),
+        Set(
+          s0--otherLetters->s0,
+          s0--l->s1,
+          s1--ExclusiveSet(Epsilon)->s1,
+          s1--l->ok
+        )
+      )
+
+      automaton.render(path(2, l.toString))
+      
+      return automaton
+    }
+    
+    val automaton = FiniteAutomaton.Union(Set(A, B, C).map(buildAutomaton))
+
+    automaton.accepts(List(A, B, A, B, C)) should be (false)
+    automaton.accepts(List(A, B, A, C, A)) should be (true)
+    
   }
 }

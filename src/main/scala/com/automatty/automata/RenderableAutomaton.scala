@@ -1,5 +1,7 @@
 package com.automatty.automata
 
+import com.automatty.sets._
+
 import guru.nidi.graphviz.attribute.Rank.RankDir
 import guru.nidi.graphviz.attribute._
 import guru.nidi.graphviz.engine.{Format, Graphviz}
@@ -12,10 +14,17 @@ trait RenderableAutomaton[A, B] extends FiniteAutomaton[A, B] {
   def render(path: String): Unit = {
     require(states.size == states.map(_.label).size, "Label of states should be unique for rendering the automata.")
 
-    def acceptedLettersRepr(al: Set[Option[A]]): String = al.map {
-      case Some(x) => x
-      case None => 'ε'
-    }.mkString(",")
+    def acceptedLettersRepr(al: Set[Option[A]]): String = al match {
+      case ExclusiveSet(elems:_*)  => s"*\\\\${elems.map {
+        case Some(x) => x
+        case None => 'ε'
+      }.mkString(",")}"
+      case UniversalSet => "*"
+      case al => al.map {
+        case Some(x) => x
+        case None => 'ε'
+      }.mkString(",")
+    }
 
     def stylishAcceptorState(label: String, n: Node): Node =
       if (acceptorStates.map(_.label).contains(label))
