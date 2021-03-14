@@ -81,7 +81,7 @@ object FiniteAutomaton {
                                      mm: MemoryManager[A, B] = EmptyMemoryManager
                                    ) extends NondeterministicAncestor[A, B] {
     def accepts(word: Iterable[A]): Boolean = {
-      execute(states.collect { case s if s.isInstanceOf[InitialState] => (s, word) }.toList)
+      execute(initialStates.map(s => (s, word)).toList)
         .exists(_.isInstanceOf[AcceptorState])
     }
 

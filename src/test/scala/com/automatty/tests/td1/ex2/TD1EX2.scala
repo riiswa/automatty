@@ -1,6 +1,5 @@
 package com.automatty.tests.td1.ex2
 
-
 import com.automatty.automata.FiniteAutomaton
 import com.automatty.automata.states._
 import com.automatty.implicits._
@@ -75,6 +74,4 @@ class TD1EX2 extends AnyFlatSpec with should.Matchers with HavePath(1, 2) {
 
     automaton.render(path(2, ""))
   }
-  
- 
 }

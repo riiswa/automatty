@@ -22,8 +22,8 @@ case class Transition[A, B](
 
   def isDefinedAt(p: (State, A, MemoryManager[A, B])): Boolean = p match {
     case (s, a, pm@PushdownManager(_, _, memoryCheck)) => 
-      s1 == s && acceptedLetters.flatten.contains(a) && memoryCheck(pm.memory.head)
-    case (s, a, EmptyMemoryManager) => s1 == s && acceptedLetters.flatten.contains(a)
+      s1 == s && acceptedLetters.contains(Some(a)) && memoryCheck(pm.memory.head)
+    case (s, a, EmptyMemoryManager) => s1 == s && acceptedLetters.contains(Some(a))
   }
   
   def inverse: Transition[A, B] = Transition(s2, acceptedLetters, s2)
