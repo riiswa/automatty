@@ -2,6 +2,8 @@ package com.automatty.automata
 
 import com.automatty.automata.states._
 import com.automatty.automata.memory._
+import com.automatty.implicits._
+import com.automatty.sets.SingletonSet
 
 trait FiniteAutomaton[A, B] {
   def transitions: Set[Transition[A, B]]
@@ -39,6 +41,8 @@ sealed trait NondeterministicAncestor[A, B] extends FiniteAutomaton[A, B] with F
         case sw => sw :: Nil
       })
       else currentStates.map(_._1).toSet
+  
+  def unifyingInitialStates(newInitialStateLabel: String = ""): NondeterministicAncestor[A, B]
 }
 
 sealed trait DeterministicAncestor[A, B] extends FiniteAutomaton[A, B] with FiniteAutomatonOps[A, B] {
@@ -80,9 +84,19 @@ object FiniteAutomaton {
                                      transitions: Set[Transition[A, B]],
                                      mm: MemoryManager[A, B] = EmptyMemoryManager
                                    ) extends NondeterministicAncestor[A, B] {
-    def accepts(word: Iterable[A]): Boolean = {
+    def accepts(word: Iterable[A]): Boolean = 
       execute(initialStates.map(s => (s, word)).toList)
         .exists(_.isInstanceOf[AcceptorState])
+
+    def unifyingInitialStates(newInitialStateLabel: String = ""): NondeterministicAncestor[A, B] = {
+      val is = new State(newInitialStateLabel) with InitialState
+      val swi = statesWithoutInitial
+
+      Nondeterministic(
+        states.map(swi) + is,
+        transitions.map(t => Transition(swi(t.s1), t.acceptedLetters, swi(t.s2))) 
+          ++ initialStates.map[Transition[A, B]](ois => is--SingletonSet[Option[A]](Epsilon)->swi(ois))
+      )
     }
 
     def complement: Nondeterministic[A, B] = {
@@ -94,6 +108,7 @@ object FiniteAutomaton {
 
     def inverse: Nondeterministic[A, B] = Nondeterministic(states, transitions.map(_.inverse), mm)
 
+    
   }
 
   case class Deterministic[A, B](

@@ -67,6 +67,5 @@ class TD1EX3 extends AnyFlatSpec with should.Matchers with HavePath(1, 3) {
 
     automaton.accepts(List(A, B, A, B, C)) should be (false)
     automaton.accepts(List(A, B, A, C, A)) should be (true)
-    
   }
 }

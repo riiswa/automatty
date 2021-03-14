@@ -10,6 +10,12 @@ trait FiniteAutomatonOps[A, B] extends FiniteAutomaton[A, B] with RenderableAuto
     case s => s
   })).toMap
 
+  protected def statesWithoutInitial: Map[State, State] = states.map(s => s -> (s match {
+    case _: AcceptorState with InitialState => new State(s.label) with AcceptorState
+    case _: InitialState => new State(s.label)
+    case s => s
+  })).toMap
+
   def parent = this
 
   def mm: MemoryManager[A, B]
