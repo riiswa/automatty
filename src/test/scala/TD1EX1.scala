@@ -7,6 +7,7 @@ import org.junit.Test
 
 
 class TD1EX1 {
+  /*
   trait Alphabet
 
   case object A extends Alphabet
@@ -94,5 +95,5 @@ class TD1EX1 {
     assertEquals(automaton.accepts(List(B)), true)
     assertEquals(automaton.accepts(List(A, B, A)), false)
     assertEquals(automaton.accepts(List(B, A, B, B, A, B)), true)
-  }
+  }*/
 }
